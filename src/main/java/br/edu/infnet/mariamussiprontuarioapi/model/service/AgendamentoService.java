@@ -1,9 +1,11 @@
 package br.edu.infnet.mariamussiprontuarioapi.model.service;
 
 import br.edu.infnet.mariamussiprontuarioapi.model.domain.Agendamento;
+import br.edu.infnet.mariamussiprontuarioapi.model.domain.BoletimEmergencia;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class AgendamentoService {
 
@@ -34,13 +36,52 @@ public class AgendamentoService {
         }
     }
 
-    public void validarBoletim(Agendamento agendamento) {
-        if (agendamento.getBoletim() != null) {
-            // Boletim só pode estar associado se o paciente for o mesmo
-            if (!agendamento.getBoletim().getPaciente().equalsIgnoreCase(agendamento.getPaciente())) {
-                throw new IllegalArgumentException("Paciente do boletim não corresponde ao do agendamento");
-            }
+    public void validarValor(BigDecimal valor, String tipoConsulta) {
+        if (valor == null) {
+            throw new IllegalArgumentException("Valor é obrigatório");
         }
+
+        if (valor.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Valor não pode ser negativo");
+        }
+
+        if (tipoConsulta.equalsIgnoreCase("particular") && valor.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Consultas particulares devem ter valor maior que zero");
+        }
+
+        if (tipoConsulta.equalsIgnoreCase("plano") && valor.compareTo(BigDecimal.ZERO) > 0) {
+            throw new IllegalArgumentException("Consultas por plano devem ter valor zero");
+        }
+    }
+
+    public void validarPacienteBoletim(Agendamento agendamento, BoletimEmergencia boletim) {
+        if (!agendamento.getPaciente().equalsIgnoreCase(boletim.getPaciente())) {
+            throw new IllegalArgumentException(
+                    "Paciente do agendamento não corresponde ao paciente do boletim"
+            );
+        }
+    }
+
+    public void validarPaciente(String paciente) {
+        if (paciente == null || paciente.isBlank()) {
+            throw new IllegalArgumentException("Paciente é obrigatório");
+        }
+    }
+
+    public void validarMedico(String medico) {
+        if (medico == null || medico.isBlank()) {
+            throw new IllegalArgumentException("Médico é obrigatório");
+        }
+    }
+
+    public void validarAgendamento(Agendamento agendamento) {
+        Objects.requireNonNull(agendamento, "Agendamento não pode ser nulo");
+
+        validarData(agendamento.getData());
+        validarPaciente(agendamento.getPaciente());
+        validarMedico(agendamento.getMedico());
+        validarTipoConsulta(agendamento.getTipoConsulta(), agendamento.getPlanoDeSaude(), agendamento.getValor());
+        validarValor(agendamento.getValor(), agendamento.getTipoConsulta());
     }
 
 }
