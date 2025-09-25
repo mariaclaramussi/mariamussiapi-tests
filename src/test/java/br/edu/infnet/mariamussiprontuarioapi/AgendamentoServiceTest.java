@@ -30,7 +30,7 @@ public class AgendamentoServiceTest {
 
     @Test
     @DisplayName("01 - Deve exibir erro para consulta agendada em data passada")
-    void deveLancarExcecaoQuandoDataNoPassado() {
+    void deveLancarExcecao_quandoDataNoPassado() {
         agendamentoTeste.setData(LocalDateTime.now().minusDays(1));
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
@@ -40,7 +40,7 @@ public class AgendamentoServiceTest {
 
     @Test
     @DisplayName("02 - Deve exibir erro quando o plano nao é informado em consulta de plano")
-    void deveLancarExcecaoQuandoPlanoNaoInformadoParaConsultaComPlano() {
+    void deveLancarExcecao_quandoPlanoNaoInformadoParaConsultaComPlano() {
         agendamentoTeste.setTipoConsulta("plano");
         agendamentoTeste.setPlanoDeSaude(null);
         agendamentoTeste.setValor(BigDecimal.ZERO);
@@ -54,7 +54,7 @@ public class AgendamentoServiceTest {
 
     @Test
     @DisplayName("03 - Deve exibir erro quando o valor é informado em consulta de plano")
-    void deveLancarExcecaoQuandoPlanoComValorNaoZero() {
+    void deveLancarExcecao_quandoPlanoComValorNaoZero() {
         agendamentoTeste.setTipoConsulta("plano");
         agendamentoTeste.setPlanoDeSaude("Amil");
 
@@ -65,7 +65,7 @@ public class AgendamentoServiceTest {
 
     @Test
     @DisplayName("04 - Deve exibir erro quando valor da consulta particular for negativo")
-    void deveLancarExcecaoQuandoValorNegativo() {
+    void deveLancarExcecao_quandoValorNegativo() {
         agendamentoTeste.setValor(new BigDecimal("-50"));
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
@@ -75,7 +75,7 @@ public class AgendamentoServiceTest {
 
     @Test
     @DisplayName("05 - Deve exibir erro quando paciente do boletim é diferente do agendamento")
-    void deveLancarExcecaoQuandoPacienteNaoCorresponde() {
+    void deveLancarExcecao_quandoPacienteNaoCorrespondeBoletim() {
         BoletimEmergencia boletim = new BoletimEmergencia();
         boletim.setPaciente("Maria da Silva");
 
@@ -86,7 +86,7 @@ public class AgendamentoServiceTest {
 
     @Test
     @DisplayName("06 - Agendamento nao pode ser criado sem tipo de consulta válido")
-    void deveLancarExcecaoSeTipoDeConsultaInvalido() {
+    void deveLancarExcecao_quandoTipoDeConsultaInvalido() {
         agendamentoTeste.setTipoConsulta("SUS");
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
                 () -> agendamentoService.validarTipoConsulta(agendamentoTeste.getTipoConsulta(), agendamentoTeste.getPlanoDeSaude(), agendamentoTeste.getValor()));
@@ -95,13 +95,13 @@ public class AgendamentoServiceTest {
 
     @Test
     @DisplayName("07 - Agendamento particular deve ser validado com sucesso")
-    void deveValidarAgendamentoParticularComSucesso() {
+    void deveObterSucesso_quandoAgendamentoParticularValido() {
         assertDoesNotThrow(() -> agendamentoService.validarAgendamento(agendamentoTeste));
     }
 
     @Test
     @DisplayName("08 - Agendamento de plano deve ser validado com sucesso")
-    void deveValidarAgendamentoPlanoComValorZero() {
+    void deveObterSucesso_quandoAgendamentoPlanoValido() {
         agendamentoTeste.setTipoConsulta("plano");
         agendamentoTeste.setPlanoDeSaude("Unimed");
         agendamentoTeste.setValor(BigDecimal.ZERO);
@@ -111,7 +111,7 @@ public class AgendamentoServiceTest {
 
     @Test
     @DisplayName("09 - Deve exibir erro para agendamento sem paciente")
-    void deveValidarPacienteNaoNulo() {
+    void deveLancarExcecao_quandoPacienteNulo() {
         agendamentoTeste.setPaciente(null);
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
@@ -121,7 +121,7 @@ public class AgendamentoServiceTest {
 
     @Test
     @DisplayName("10 - Deve exibir erro para agendamento sem médico")
-    void deveValidarMedicoNaoNulo() {
+    void deveLancarExcecao_quandoMedicoNulo() {
         agendamentoTeste.setMedico(null);
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
@@ -131,7 +131,7 @@ public class AgendamentoServiceTest {
 
     @Test
     @DisplayName("11 - Deve exibir erro quando o valor é informado em consulta de plano")
-    void deveLancarExcecaoQuandoParticularComValorNulo() {
+    void deveLancarExcecao_quandoParticularComValorNulo() {
         agendamentoTeste.setValor(BigDecimal.ZERO);
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
@@ -142,7 +142,7 @@ public class AgendamentoServiceTest {
 
     @Test
     @DisplayName("12 - Deve exibir erro para todos os parametros obrigatórios com valor nulo")
-    void deveLancarExcecoesQuandoValorObrigatorioNulo() {
+    void deveLancarExcecoes_quandoValorObrigatorioNulo() {
         agendamentoTeste.setData(null);
         agendamentoTeste.setTipoConsulta(null);
         agendamentoTeste.setValor(null);
@@ -159,7 +159,7 @@ public class AgendamentoServiceTest {
 
     @Test
     @DisplayName("13 - Deve lancar excecao para plano de saude informado em consulta particular")
-    void deveLancarExcecoesQuandoPlanoDeSaudeEmParticular() {
+    void deveLancarExcecoes_quandoExistirPlanoDeSaudeEmConsultaParticular() {
         agendamentoTeste.setPlanoDeSaude("Amil");
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
                 () -> agendamentoService.validarTipoConsulta(agendamentoTeste.getTipoConsulta(),agendamentoTeste.getPlanoDeSaude(), agendamentoTeste.getValor()));

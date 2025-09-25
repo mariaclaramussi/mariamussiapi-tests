@@ -30,13 +30,14 @@ public class BoletimEmergenciaServiceTest {
     }
 
     @Test
+    @DisplayName("01 - Deve ibter sucesso para boletim preenchido corretamente")
     void deveValidarBoletimComSucesso() {
         assertDoesNotThrow(() -> boletimEmergenciaService.validarBoletim(boletim));
     }
 
     @Test
-    @DisplayName("01 - Deve exibir erro se paciente for nulo")
-    void deveLancarExcecaoQuandoPacienteForNulo() {
+    @DisplayName("02 - Deve exibir erro se paciente for nulo")
+    void deveLancarExcecao_quandoPacienteForNulo() {
         boletim.setPaciente(null);
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
@@ -45,8 +46,8 @@ public class BoletimEmergenciaServiceTest {
     }
 
     @Test
-    @DisplayName("02 - Deve exibir erro se data de entrada for futura")
-    void deveLancarExcecaoQuandoDataEntradaFutura() {
+    @DisplayName("03 - Deve exibir erro se data de entrada for futura")
+    void deveLancarExcecao_QuandoDataEntradaFutura() {
         boletim.setDataEntrada(LocalDateTime.now().plusDays(1));
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
@@ -55,8 +56,8 @@ public class BoletimEmergenciaServiceTest {
     }
 
     @Test
-    @DisplayName("03 - Deve exibir erro se tempo de espera for excedido para paciente URGENTE")
-    void deveGerarAlertaQuandoUrgenteComTempoExcedido() {
+    @DisplayName("04 - Deve exibir alerta se tempo de espera for excedido para paciente URGENTE")
+    void deveRetornarTrue_quandoUrgenteComTempoExcedido() {
         boletim.setClassificacaoRisco(ClassificacaoRisco.URGENTE);
         boletim.setDataEntrada(LocalDateTime.now().minusMinutes(30));
 
@@ -66,8 +67,8 @@ public class BoletimEmergenciaServiceTest {
     }
 
     @Test
-    @DisplayName("04 - Deve ter sucesso quando tempo de espera for longo para paciente NAO urgente")
-    void naoDeveGerarAlertaQuandoNaoUrgenteMesmoComEsperaLonga() {
+    @DisplayName("05 - Nao deve exibir alerta quando tempo de espera for longo para paciente NAO urgente")
+    void deveRetornarFalse_QuandoNaoUrgenteMesmoComEsperaLonga() {
         boletim.setClassificacaoRisco(ClassificacaoRisco.BAIXA);
         boletim.setDataEntrada(LocalDateTime.now().minusMinutes(60));
 
@@ -77,7 +78,8 @@ public class BoletimEmergenciaServiceTest {
     }
 
     @Test
-    void deveLancarExcecaoQuandoClassificacaoRiscoForNula() {
+    @DisplayName("06 - Deve exibir erro se classificacao for vazia")
+    void deveLancarExcecao_quandoClassificacaoRiscoForNula() {
         boletim.setClassificacaoRisco(null);
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> boletimEmergenciaService.validarClassificacaoRisco(boletim.getClassificacaoRisco()));
@@ -86,7 +88,8 @@ public class BoletimEmergenciaServiceTest {
     }
 
     @Test
-    void deveLancarExcecaoQuandoAnamneseNula() {
+    @DisplayName("07 - Deve exibir erro se anamnese for vazia")
+    void deveLancarExcecao_quandoAnamneseNula() {
         boletim.setAnamese(null);
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> boletimEmergenciaService.validarAnamnese(boletim.getAnamese()));
@@ -95,7 +98,8 @@ public class BoletimEmergenciaServiceTest {
     }
 
     @Test
-    void deveLancarExcecaoQuandoBoletimNulo() {
+    @DisplayName("08 - Deve exibir erro se boletim for nulo")
+    void deveLancarExcecao_quandoBoletimNulo() {
         BoletimEmergencia boletimVazio = null;
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> boletimEmergenciaService.validarBoletim(boletimVazio));
