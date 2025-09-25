@@ -25,6 +25,18 @@ public class BoletimEmergenciaService {
         }
     }
 
+    public void validarClassificacaoRisco(ClassificacaoRisco classificacao) {
+        if (classificacao == null) {
+            throw new IllegalArgumentException("Classificação de risco é obrigatória");
+        }
+    }
+
+    public void validarAnamnese(String anamnese) {
+        if (anamnese == null) {
+            throw new IllegalArgumentException("Anamnese não pode ser vazia");
+        }
+    }
+
     /**
      * Regras de tempo de espera: para casos URGENTES,
      * dispara alerta se tempo de espera excede limite
